@@ -20,6 +20,8 @@ function git_sparse_clone() {
 }
 
 # 添加额外插件
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
 git clone --depth=1 -b openwrt-18.06 https://github.com/tty228/luci-app-wechatpush package/luci-app-serverchan
 git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser
 git clone --depth=1 https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
