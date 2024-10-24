@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#删除luci文件夹
+rm -rf feeds
+
+#修改feeds.conf.default
+cat <<EOF > feeds.conf.default
+src-git packages https://github.com/coolsnowwolf/packages
+src-git luci https://github.com/coolsnowwolf/luci
+src-git routing https://github.com/coolsnowwolf/routing
+src-git telephony https://github.com/openwrt/telephony.git;openwrt-23.05
+EOF
+
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate
 
@@ -7,7 +18,7 @@ sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generat
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
 # 移除要替换的包
-rm -rf feeds/luci/applications/luci-app-serverchan
+rm -rf feeds/luci/themes/luci-theme-argon
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
@@ -20,12 +31,13 @@ function git_sparse_clone() {
 }
 
 # 添加额外插件
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
-git clone --depth=1 -b openwrt-18.06 https://github.com/tty228/luci-app-wechatpush package/luci-app-serverchan
-git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser
 git clone --depth=1 https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
-git clone --depth=1 https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
+git clone --depth=1 https://github.com/tty228/luci-app-wechatpush.git package/luci-app-wechatpush
+git_sparse_clone main https://github.com/kenzok8/small-package luci-app-wrtbwmon wrtbwmon
+
+# Themes
+git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 
 # 在线用户
 git_sparse_clone main https://github.com/haiibo/packages luci-app-onliner
